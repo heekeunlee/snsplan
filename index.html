@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>SNS 운영 계획</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600;700&family=Gowun+Dodum&display=swap">
+<style>
+:root{--bg:#f4f1ea;--panel:#fff;--fg:#1c1a17;--mut:#6c665c;--line:#e3ddd1;--acc:#2f6fdb;--hi:#fff5cf;--chip:#efe9dd;
+--yt:#e5322d;--nb:#03a94f;--nc:#00b493;--ig:#c1358f;--rd:#ff5700;--gh:#57606a;--mk:#7c5cd6;
+--f:"IBM Plex Sans KR","Apple SD Gothic Neo",sans-serif;--fd:"Gowun Dodum","IBM Plex Sans KR",sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12110f;--panel:#1c1a17;--fg:#eee8df;--mut:#a2998c;--line:#332f29;--acc:#7aa8ff;--hi:#3a3216;--chip:#2a2620;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12110f;--panel:#1c1a17;--fg:#eee8df;--mut:#a2998c;--line:#332f29;--acc:#7aa8ff;--hi:#3a3216;--chip:#2a2620;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 var(--f)}
+.wrap{max-width:900px;margin:0 auto;padding:24px max(16px,env(safe-area-inset-left)) 64px}
+h1{font-family:var(--fd);font-size:clamp(26px,5vw,34px);margin:4px 0}
+h2{font-family:var(--fd);font-size:22px;margin:40px 0 10px;scroll-margin-top:60px}
+.eb{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--acc)}
+.mut{color:var(--mut)}.sm{font-size:13px}
+nav{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;gap:6px;overflow-x:auto;padding:10px 0;border-bottom:1px solid var(--line)}
+nav a{flex:none;font-size:13px;text-decoration:none;color:var(--fg);background:var(--chip);border-radius:99px;padding:3px 12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:10px 0;min-width:0}
+.today{border:2px solid var(--acc)}
+.clock{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:10px}
+.clock div{background:var(--chip);border-radius:10px;padding:8px 10px}.clock b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+.day{display:grid;grid-template-columns:86px 1fr;gap:12px}
+.day .dt{font-weight:700;font-variant-numeric:tabular-nums}.day .dt small{display:block;font-weight:400;color:var(--mut)}
+.day.past{opacity:.5}.day.now{background:var(--hi)}
+.day.away .dt::after{content:'✈ 여행';display:block;font-size:11px;color:var(--acc);font-weight:700}
+.it{display:grid;grid-template-columns:auto 1fr;gap:4px 8px;padding:5px 0;border-top:1px dashed var(--line);align-items:baseline}
+.it:first-of-type{border-top:0}
+.tm{font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}.tm small{display:block;color:var(--acc);font-size:11px}
+.tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;border-radius:5px;padding:0 6px;margin-right:4px;vertical-align:1px}
+.who{font-size:11px;border:1px solid var(--line);border-radius:5px;padding:0 5px;margin-right:4px;color:var(--mut)}
+.who.me{border-color:var(--acc);color:var(--acc)}
+.note{font-size:13px;color:var(--mut);margin-bottom:2px}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;color:var(--mut);font-weight:600}
+.tw{overflow-x:auto}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.filters button{font:600 12px var(--f);border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:99px;padding:3px 10px;cursor:pointer}
+.filters button[aria-pressed=true]{background:var(--fg);color:var(--bg)}
+ul{padding-left:20px;margin:6px 0}li{margin:3px 0}
+.warn{border-left:4px solid #e0a106}
+@media (max-width:560px){.day{grid-template-columns:1fr;gap:4px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="eb">시뮬라티오 랩 · SNS 운영</div>
+  <h1>언제, 어디에, 무엇을 올릴까</h1>
+  <p class="mut sm" id="upd"></p>
+</header>
+<nav>
+  <a href="#today">오늘</a><a href="#cal">일정</a><a href="#time">황금 시간대</a><a href="#how">예약·게시 방법</a><a href="#tz">시차표</a><a href="#cmt">댓글 관리</a><a href="#strat">전략</a><a href="#make">만들 것</a>
+</nav>
+
+<h2 id="today">오늘 할 일</h2>
+<div class="card today" id="todayBox"></div>
+<div class="clock" id="clock"></div>
+
+<h2 id="cal">날짜별 일정</h2>
+<p class="sm mut">시각은 모두 <b>한국 시간</b>. 여행 기간에는 파란 글씨로 현지 시각을 함께 적었어요. <span class="who me">나</span> 직접 · <span class="who">Claude</span> · <span class="who">자동</span> 예약·자동 공개</p>
+<div class="filters" id="filters"></div>
+<div id="calBox"></div>
+
+<h2 id="time">플랫폼별 황금 시간대 (한국 시간)</h2>
+<div class="card tw"><table>
+<tr><th>플랫폼</th><th>올리는 시각</th><th>이유</th><th>주기</th></tr>
+<tr><td><span class="tag" style="background:var(--yt)">유튜브 쇼츠</span></td><td><b>09:00</b></td><td>미국 동부 전날 19:00 = 영어 시청자 저녁. 첫 1~2시간 반응으로 피드 시험이 넓어짐</td><td>하루 1편, 몰아 올리지 않기</td></tr>
+<tr><td><span class="tag" style="background:var(--nb)">네이버 블로그</span></td><td><b>00:00</b> 예약 (또는 07:30)</td><td>검색 유입이 대부분이라 시각보다 꾸준함이 중요. 깃허브(00:05)보다 먼저 공개해야 중복 문서 위험이 적음</td><td>2~3일에 1편 (화·목·토)</td></tr>
+<tr><td><span class="tag" style="background:var(--nc)">네이버 클립</span></td><td><b>12:00–13:00</b> · <b>19:00–21:00</b></td><td>점심·퇴근 뒤 휴대폰 시간</td><td>블로그와 같은 날 같은 주제</td></tr>
+<tr><td><span class="tag" style="background:var(--ig)">인스타 릴스</span></td><td><b>20:00</b> (또는 12:00)</td><td>한국 시청자 저녁. 첫 1시간 공유·저장이 가장 센 신호</td><td>블로그 날 + 여유 있으면 매일</td></tr>
+<tr><td><span class="tag" style="background:var(--rd)">레딧</span></td><td><b>22:00–01:00</b></td><td>미국 동부 아침 8~11시. 새 글이 올라오는 시간에 일찍 단 댓글이 위로 감</td><td>댓글 하루 2~3개, 자기 링크 금지</td></tr>
+</table>
+<p class="sm mut">일반적인 경향이에요. 2주마다 각 앱의 인사이트(시청자 활동 시간)를 보고 고쳐요.</p></div>
+
+<h2 id="how">예약·게시 방법</h2>
+<div class="card"><b><span class="tag" style="background:var(--nb)">네이버 블로그</span> 예약 발행 — 직접</b>
+<ul><li>깃허브 블로그 글 주소 끝에 <code>#naver</code> → 제목 복사·본문 복사 → 네이버 글쓰기에 붙여넣기</li>
+<li>발행 → 발행 시간 <b>예약</b> → 날짜·시각 (00:00)</li>
+<li>공개된 뒤 네이버 글 주소를 Claude에게 → 대시보드 '네이버 게시' 표시</li>
+<li>Claude는 네이버에 직접 올릴 수 없어요 (크롬 안전 제한, 글쓰기 API 없음)</li></ul></div>
+<div class="card"><b><span class="tag" style="background:var(--gh)">깃허브 블로그</span> — 자동</b>
+<ul><li>글의 date가 되면 매일 00:05(한국)에 저절로 공개. 할 일 없음</li></ul></div>
+<div class="card"><b><span class="tag" style="background:var(--ig)">인스타 릴스</span> 예약 — Claude 또는 직접</b>
+<ul><li>컴퓨터: Meta Business Suite(business.facebook.com) → 플래너 → 릴스 만들기 → 예약 (Claude가 크롬으로 대신 가능)</li>
+<li>휴대폰: 릴스 올리기 → 고급 설정 → <b>이 릴스 예약</b></li>
+<li>캡션: 첫 줄 질문 + "프로필 링크에서 직접 돌려 보기" + 해시태그 3~5개 (글 속 링크는 눌리지 않음)</li></ul></div>
+<div class="card"><b><span class="tag" style="background:var(--nc)">네이버 클립</span> — 직접</b>
+<ul><li>파일: 바탕화면 › 업로드-1114-쇼츠11 › 네이버클립-이름 › <b>…가벼운판.mp4</b></li>
+<li>제목·설명·해시태그는 모음 페이지의 복사 버튼, 설명 끝 "블로그에서 👉" 줄에 블로그 글 주소</li>
+<li>예약 기능은 앱에서 확인 필요. 없으면 표의 시각에 직접 올리기</li></ul></div>
+<div class="card"><b><span class="tag" style="background:var(--yt)">유튜브 쇼츠</span> — 직접</b>
+<ul><li>YouTube Studio에서 올리고 <b>예약</b> 09:00. 제목·설명·태그·고정 댓글은 업로드 체크리스트</li>
+<li>공개 뒤 영상 주소를 Claude에게 → 사이트 실험 페이지에 연결</li>
+<li>같은 내용 리마스터를 다시 올릴 때만: 새 영상이 공개된 뒤 옛 영상을 '일부 공개'로</li></ul></div>
+
+<h2 id="tz">시차표</h2>
+<div class="card tw"><table>
+<tr><th>한국</th><th>여행지 (UTC+2)</th><th>카타르 경유 (UTC+3)</th><th>미국 동부</th><th>미국 서부</th></tr>
+<tbody id="tzBody"></tbody></table>
+<p class="sm mut">여행지 = 한국 −7시간 · 미국 동부 = 한국 −14시간 · 미국 서부 = 한국 −17시간 (11월, 서머타임 없음)</p></div>
+
+<h2 id="cmt">댓글 관리</h2>
+<div class="card"><ul>
+<li><b>올린 뒤 첫 1시간</b>: 달린 댓글에 모두 답하기. 이 시간 반응이 노출을 가장 크게 좌우해요</li>
+<li><b>하루 두 번</b> (한국 점심·밤, 또는 현지 편한 때): 유튜브 → 클립 → 릴스 → 블로그 순서로 훑기</li>
+<li>답글은 <b>질문으로 끝내기</b> ("어느 줄에 서세요?") → 대화가 이어지면 노출이 늘어요</li>
+<li>좋은 질문은 <b>고정 댓글</b>·다음 편 글감으로. 메모해서 Claude에게</li>
+<li>악플·스팸: 답하지 말고 숨기기/신고. 정치 논쟁은 피하기</li>
+<li>블로그: 이웃 블로그 3곳 방문·댓글 (주 2~3회) → 이웃 늘리기</li>
+<li>레딧: 남의 글에 도움 되는 댓글만. 링크·홍보는 계정이 쌓인 뒤 소개 글 1번 (귀국 뒤)</li>
+</ul></div>
+
+<h2 id="strat">전략</h2>
+<div class="card"><ul>
+<li><b>한 주제, 같은 날, 세 곳</b>: 블로그(검색) → 클립·릴스(피드) → 사이트(직접 돌려 보기). 서로 링크로 손님을 넘겨줘요</li>
+<li><b>유튜브는 영어, 네이버·인스타는 한국어</b>. 한국어판을 유튜브 같은 채널에 올리지 않기 (반복 콘텐츠로 보임)</li>
+<li><b>제목은 생활 질문</b>: "어느 줄이 빨라?" "왜 두 대씩 와?" — 검색어가 되고 클릭을 받아요</li>
+<li><b>첫 1~2초 큰 질문 문구</b>, 끝 화면은 첫 화면으로 이어지게 (반복 시청)</li>
+<li><b>숫자는 사이트 모델로 실제 돌린 값만</b>. 블로그 예고 숫자 = 다음 편 본문 숫자</li>
+<li><b>몰아 올리지 않기</b>: 하루 1편이 노출을 나눠 먹지 않아요. 쉬는 기간은 예약으로 채우거나 그냥 쉬어도 돼요</li>
+<li><b>2주마다 점검</b>: 조회수·시청 지속·유입 시간대를 보고 시각·주제 조정</li>
+</ul></div>
+<div class="card warn"><b>여행 중 주의</b><ul>
+<li>크루즈·이동 중 와이파이가 느려요 → 큰 영상은 이심 데이터나 리조트 와이파이로</li>
+<li>휴대폰에 영상·로그인을 출발 전에 준비 (집 Mac 파일은 밖에서 못 꺼내요)</li>
+<li>매일 아침 보고(09:00 한국)는 현지 새벽 2시에 와요</li>
+</ul></div>
+
+<h2 id="make">Claude가 만들어 둘 것</h2>
+<div class="card" id="makeBox"></div>
+</div>
+
+<script src="data.js"></script>
+<script>
+var P=window.PLAN, TAG={yt:['유튜브','--yt'],nb:['네이버 블로그','--nb'],nc:['네이버 클립','--nc'],ig:['인스타','--ig'],rd:['레딧','--rd'],gh:['깃허브','--gh'],mk:['제작·준비','--mk']};
+var WHO={me:'나',claude:'Claude',auto:'자동'}, WD='일월화수목금토';
+function kstNow(){var n=new Date();return new Date(n.getTime()+(n.getTimezoneOffset()+540)*60000)}
+function ymd(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+function awayOf(d){for(var i=0;i<P.away.length;i++){var a=P.away[i];if(d>=a.from&&d<=a.to)return a}return null}
+function esc(s){return String(s).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+function shift(t,off){ // "19:00–20:00" → 현지 "12:00–13:00"
+  var prev=false;var s=t.replace(/(\d{1,2}):(\d{2})/g,function(_,h,m){if(+h+off<0)prev=true;h=((+h+off)%24+24)%24;return('0'+h).slice(-2)+':'+m});return s+(prev?' (전날)':'')}
+function item(it,a){var tg=TAG[it.p];var loc=a&&/\d:\d/.test(it.t)?'<small>현지 '+shift(it.t,a.offset)+'</small>':'';
+  return '<div class="it" data-p="'+it.p+'"><span class="tm">'+(esc(it.t)||'·')+loc+'</span><span><span class="tag" style="background:var('+tg[1]+')">'+tg[0]+'</span><span class="who '+it.who+'">'+WHO[it.who]+'</span>'+esc(it.x)+'</span></div>'}
+function dayHtml(D,today){var dt=new Date(D.d+'T00:00:00'),a=awayOf(D.d);
+  var cls='card day'+(D.d<today?' past':'')+(D.d===today?' now':'')+(a?' away':'');
+  return '<div class="'+cls+'" id="d'+D.d+'"><div class="dt">'+(dt.getMonth()+1)+'/'+dt.getDate()+' ('+WD[dt.getDay()]+')<small>'+(D.d===today?'오늘':'')+'</small></div><div>'+(D.note?'<div class="note">'+esc(D.note)+'</div>':'')+(D.items.length?D.items.map(function(i){return item(i,a)}).join(''):'<span class="mut sm">할 일 없음 — 쉬기</span>')+'</div></div>'}
+var today=ymd(kstNow());
+document.getElementById('upd').textContent='마지막 수정 '+P.updated+' · 오늘(한국) '+today;
+function render(f){document.getElementById('calBox').innerHTML=P.days.map(function(D){var c=Object.assign({},D,{items:D.items.filter(function(i){return!f||i.p===f})});return(f&&!c.items.length)?'':dayHtml(c,today)}).join('')}
+render('');
+var fb=document.getElementById('filters');[['','전체']].concat(Object.keys(TAG).map(function(k){return[k,TAG[k][0]]})).forEach(function(x,i){var b=document.createElement('button');b.textContent=x[1];b.setAttribute('aria-pressed',i?'false':'true');b.onclick=function(){fb.querySelectorAll('button').forEach(function(z){z.setAttribute('aria-pressed','false')});b.setAttribute('aria-pressed','true');render(x[0])};fb.appendChild(b)});
+// 오늘 · 다음 일정
+var T=P.days.filter(function(D){return D.d===today})[0], N=P.days.filter(function(D){return D.d>today&&D.items.length})[0], tb=document.getElementById('todayBox');
+tb.innerHTML=(T?dayHtml(T,'').replace('card day','day'):'<p class="mut">오늘은 정해진 일이 없어요.</p>')+(N?'<p class="sm mut" style="margin:10px 0 0">다음: <a href="#d'+N.d+'">'+N.d.slice(5).replace('-','/')+' '+esc(N.note||N.items[0].x)+'</a></p>':'');
+// 시계
+function tick(){var k=kstNow(),z=[['한국',0],['여행지',-7],['미국 동부',-14],['미국 서부',-17]];document.getElementById('clock').innerHTML=z.map(function(x){var d=new Date(k.getTime()+x[1]*3600000);return'<div><span class="sm mut">'+x[0]+'</span><b>'+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)+'</b><span class="sm mut">'+(d.getMonth()+1)+'/'+d.getDate()+'</span></div>'}).join('')}
+tick();setInterval(tick,30000);
+// 시차표
+var rows='';[0,7,9,12,13,19,20,21,22,23].forEach(function(h){function f(o){var x=((h+o)%24+24)%24;return('0'+x).slice(-2)+':00'+(h+o<0?' <small class="mut">전날</small>':'')}rows+='<tr><td><b>'+f(0)+'</b></td><td>'+f(-7)+'</td><td>'+f(-6)+'</td><td>'+f(-14)+'</td><td>'+f(-17)+'</td></tr>'});
+document.getElementById('tzBody').innerHTML=rows;
+document.getElementById('makeBox').innerHTML='<ul>'+P.make.map(function(m){return'<li><b>'+m.due.slice(5).replace('-','/')+'까지</b> · '+esc(m.x)+'</li>'}).join('')+'</ul>';
+if(T)setTimeout(function(){},0);
+</script>
+</body>
+</html>
