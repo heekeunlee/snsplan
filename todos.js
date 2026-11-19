@@ -502,9 +502,9 @@ window.TODOS = {
    "title": "인스타 릴스 3편 예약 (11/24·26·28 20:00) — Business Suite, 캡션은 snsplan 여행 꾸러미",
    "who": "both",
    "due": "2026-11-20",
-   "status": "todo",
-   "why": "Claude가 크롬으로 예약 가능(business.facebook.com 로그인 필요), 예약 전 확인",
-   "done": null
+   "status": "done",
+   "why": "@simulatiolab Business Suite 예약 완료(11/24·26·28 20:00). 10MB 아래로 줄인 판(바탕화면 업로드-1114-쇼츠11/릴스-예약용)",
+   "done": "2026-11-19"
   },
   {
    "id": "insta-profile-link",
@@ -513,6 +513,33 @@ window.TODOS = {
    "due": "2026-11-20",
    "status": "todo",
    "why": "릴스 캡션의 '프로필 링크'가 가리킬 곳",
+   "done": null
+  },
+  {
+   "id": "story-queue",
+   "title": "11/24 20:05–21:00 인스타 스토리: 「새치기」 릴스 공유 + 링크 스티커 simulatiolab.com/queue (현지 13:05–14:00)",
+   "who": "me",
+   "due": "2026-11-24",
+   "status": "todo",
+   "why": "스토리 링크 스티커는 눌려서 사이트로 바로 감(프로필 링크보다 클릭 많음). 예약 불가 — snsplan 여행 꾸러미에 순서·문구",
+   "done": null
+  },
+  {
+   "id": "story-regression",
+   "title": "11/26 20:05–21:00 인스타 스토리: 「칭찬과 꾸중」 릴스 공유 + 링크 스티커 simulatiolab.com/regression (현지 13:05–14:00)",
+   "who": "me",
+   "due": "2026-11-26",
+   "status": "todo",
+   "why": "스토리 링크 스티커는 눌려서 사이트로 바로 감(프로필 링크보다 클릭 많음). 예약 불가 — snsplan 여행 꾸러미에 순서·문구",
+   "done": null
+  },
+  {
+   "id": "story-greenwave",
+   "title": "11/28 20:05–21:00 인스타 스토리: 「녹색 물결」 릴스 공유 + 링크 스티커 simulatiolab.com/greenwave (현지 13:05–14:00)",
+   "who": "me",
+   "due": "2026-11-28",
+   "status": "todo",
+   "why": "스토리 링크 스티커는 눌려서 사이트로 바로 감(프로필 링크보다 클릭 많음). 예약 불가 — snsplan 여행 꾸러미에 순서·문구",
    "done": null
   }
  ]
