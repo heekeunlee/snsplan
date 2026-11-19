@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <title>SNS 운영 계획</title>
+<script>try{var m=localStorage.getItem("theme");if(m)document.documentElement.setAttribute("data-theme",m)}catch(e){}</script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600;700&family=Gowun+Dodum&display=swap">
 <style>
 :root{--bg:#f4f1ea;--panel:#fff;--fg:#1c1a17;--mut:#6c665c;--line:#e3ddd1;--acc:#2f6fdb;--hi:#fff5cf;--chip:#efe9dd;
@@ -44,23 +45,45 @@ th{font-size:12px;color:var(--mut);font-weight:600}
 .filters button[aria-pressed=true]{background:var(--fg);color:var(--bg)}
 ul{padding-left:20px;margin:6px 0}li{margin:3px 0}
 .warn{border-left:4px solid #e0a106}
+header{position:relative}
+.theme{position:absolute;right:0;top:0;font:600 13px var(--f);border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:99px;padding:5px 12px;cursor:pointer}
+.theme:focus-visible,.filters button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin:10px 0}
+.sum div{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 12px}.sum b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
+.sum .bad b{color:#d9480f}
+.grp{font-weight:700;font-size:14px;margin:14px 0 4px}.grp.bad{color:#d9480f}
+.td{display:grid;grid-template-columns:62px 1fr;gap:8px;padding:7px 0;border-top:1px dashed var(--line)}
+.td:first-of-type{border-top:0}.td .due{font-size:13px;font-variant-numeric:tabular-nums;color:var(--mut)}
+.td .why{display:block;font-size:12px;color:var(--mut)}
+.st{font-size:11px;font-weight:700;border-radius:5px;padding:0 6px;margin-right:4px;background:var(--chip)}
+.st.doing{background:#dbeafe;color:#1d4ed8}.st.wait{background:#fef3c7;color:#92400e}
+.who.both{border-color:var(--mk);color:var(--mk)}
+details summary{cursor:pointer;font-weight:700;font-size:14px;margin-top:14px}
+.td.done{opacity:.6}
 @media (max-width:560px){.day{grid-template-columns:1fr;gap:4px}}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
+  <button class="theme" id="themeBtn" type="button" aria-label="밝은/어두운 화면 바꾸기"></button>
   <div class="eb">시뮬라티오 랩 · SNS 운영</div>
   <h1>언제, 어디에, 무엇을 올릴까</h1>
   <p class="mut sm" id="upd"></p>
 </header>
 <nav>
-  <a href="#today">오늘</a><a href="#cal">일정</a><a href="#time">황금 시간대</a><a href="#how">예약·게시 방법</a><a href="#tz">시차표</a><a href="#cmt">댓글 관리</a><a href="#strat">전략</a><a href="#make">만들 것</a>
+  <a href="#today">오늘</a><a href="#todo">전체 할 일</a><a href="#cal">일정</a><a href="#time">황금 시간대</a><a href="#how">예약·게시 방법</a><a href="#tz">시차표</a><a href="#cmt">댓글 관리</a><a href="#strat">전략</a><a href="#make">만들 것</a>
 </nav>
 
 <h2 id="today">오늘 할 일</h2>
 <div class="card today" id="todayBox"></div>
 <div class="clock" id="clock"></div>
+
+<h2 id="todo">전체 할 일</h2>
+<p class="sm mut">운영 할 일 목록 전체(매일 아침 보고와 같은 목록). <span id="todoUpd"></span></p>
+<div class="sum" id="todoSum"></div>
+<div class="filters" id="whoF"></div>
+<div class="card" id="todoBox"></div>
 
 <h2 id="cal">날짜별 일정</h2>
 <p class="sm mut">시각은 모두 <b>한국 시간</b>. 여행 기간에는 파란 글씨로 현지 시각을 함께 적었어요. <span class="who me">나</span> 직접 · <span class="who">Claude</span> · <span class="who">자동</span> 예약·자동 공개</p>
@@ -137,6 +160,7 @@ ul{padding-left:20px;margin:6px 0}li{margin:3px 0}
 </div>
 
 <script src="data.js"></script>
+<script src="todos.js"></script>
 <script>
 var P=window.PLAN, TAG={yt:['유튜브','--yt'],nb:['네이버 블로그','--nb'],nc:['네이버 클립','--nc'],ig:['인스타','--ig'],rd:['레딧','--rd'],gh:['깃허브','--gh'],mk:['제작·준비','--mk']};
 var WHO={me:'나',claude:'Claude',auto:'자동'}, WD='일월화수목금토';
@@ -166,7 +190,32 @@ tick();setInterval(tick,30000);
 var rows='';[0,7,9,12,13,19,20,21,22,23].forEach(function(h){function f(o){var x=((h+o)%24+24)%24;return('0'+x).slice(-2)+':00'+(h+o<0?' <small class="mut">전날</small>':'')}rows+='<tr><td><b>'+f(0)+'</b></td><td>'+f(-7)+'</td><td>'+f(-6)+'</td><td>'+f(-14)+'</td><td>'+f(-17)+'</td></tr>'});
 document.getElementById('tzBody').innerHTML=rows;
 document.getElementById('makeBox').innerHTML='<ul>'+P.make.map(function(m){return'<li><b>'+m.due.slice(5).replace('-','/')+'까지</b> · '+esc(m.x)+'</li>'}).join('')+'</ul>';
-if(T)setTimeout(function(){},0);
+// ── 테마 스위치
+(function(){var b=document.getElementById('themeBtn'),root=document.documentElement;
+ function cur(){var m=root.getAttribute('data-theme');if(m)return m;return matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}
+ function label(){b.textContent=cur()==='dark'?'☀️ 밝게':'🌙 어둡게'}
+ b.onclick=function(){var n=cur()==='dark'?'light':'dark';root.setAttribute('data-theme',n);try{localStorage.setItem('theme',n)}catch(e){}label()};label()})();
+// ── 전체 할 일
+(function(){var D=(window.TODOS||{items:[]}),L=D.items,ST={todo:'',doing:'진행 중',wait:'기다림',done:'완료'},WH={me:'나',claude:'Claude',both:'함께'};
+ document.getElementById('todoUpd').textContent=D.updated?'목록 갱신 '+D.updated:'';
+ var wk=ymd(new Date(new Date(today+'T00:00:00').getTime()+7*864e5));
+ function grp(t){if(t.status==='done')return'done';if(t.due==='daily')return'daily';if(!t.due)return'none';if(t.due<today)return'late';if(t.due===today)return'today';if(t.due<=wk)return'week';return'later'}
+ var G=[['late','⚠️ 밀린 일',1],['today','오늘',0],['week','이번 주 (7일 안)',0],['daily','매일 하는 일',0],['later','나중',0],['none','날짜 없음',0]];
+ function row(t){var due=t.due==='daily'?'매일':t.due?t.due.slice(5).replace('-','/'):'—';
+  return'<div class="td'+(t.status==='done'?' done':'')+'"><span class="due">'+due+'</span><span><span class="who '+t.who+'">'+(WH[t.who]||t.who)+'</span>'+(ST[t.status]?'<span class="st '+t.status+'">'+ST[t.status]+'</span>':'')+esc(t.title)+(t.why?'<span class="why">'+esc(t.why)+'</span>':'')+'</span></div>'}
+ function draw(w){var xs=L.filter(function(t){return!w||t.who===w||(w!=='both'&&t.who==='both')}),by={};xs.forEach(function(t){var g=grp(t);(by[g]=by[g]||[]).push(t)});
+  Object.keys(by).forEach(function(g){by[g].sort(function(a,b){return(a.due||'z')<(b.due||'z')?-1:1})});
+  var h=G.filter(function(g){return by[g[0]]}).map(function(g){return'<div class="grp'+(g[2]?' bad':'')+'">'+g[1]+' · '+by[g[0]].length+'</div>'+by[g[0]].map(row).join('')}).join('');
+  if(by.done)h+='<details><summary>완료 '+by.done.length+'개</summary>'+by.done.sort(function(a,b){return(a.done||'')>(b.done||'')?-1:1}).map(row).join('')+'</details>';
+  document.getElementById('todoBox').innerHTML=h||'<span class="mut">할 일 없음</span>';
+  var c=function(g){return(by[g]||[]).length};
+  document.getElementById('todoSum').innerHTML='<div class="bad"><span class="sm mut">밀린 일</span><b>'+c('late')+'</b></div><div><span class="sm mut">오늘</span><b>'+c('today')+'</b></div><div><span class="sm mut">이번 주</span><b>'+c('week')+'</b></div><div><span class="sm mut">나중</span><b>'+(c('later')+c('none'))+'</b></div><div><span class="sm mut">완료</span><b>'+c('done')+'</b></div>'}
+ var wf=document.getElementById('whoF');[['','전체'],['me','나'],['claude','Claude'],['both','함께']].forEach(function(x,i){var b=document.createElement('button');b.textContent=x[1];b.setAttribute('aria-pressed',i?'false':'true');b.onclick=function(){wf.querySelectorAll('button').forEach(function(z){z.setAttribute('aria-pressed','false')});b.setAttribute('aria-pressed','true');draw(x[0])};wf.appendChild(b)});
+ draw('');
+ // 오늘 상자에 할 일 목록의 오늘·밀린 일도 함께
+ var due=L.filter(function(t){return t.status!=='done'&&t.due&&t.due!=='daily'&&t.due<=today});
+ if(due.length)tb.insertAdjacentHTML('beforeend','<div class="grp">할 일 목록에서 오늘까지 · '+due.length+'개 <a class="sm" href="#todo">전체 보기</a></div>'+due.slice(0,6).map(row).join('')+(due.length>6?'<p class="sm mut">…외 '+(due.length-6)+'개</p>':''));
+})();
 </script>
 </body>
 </html>
