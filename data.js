@@ -4,7 +4,7 @@
 window.PLAN = {
   updated: '2026-11-19',
   // 해외 체류 기간: 현지 시각 = KST + offset 시간
-  away: [{ from: '2026-11-21', to: '2026-11-29', offset: -7, label: '여행 (UTC+2)' }],
+  away: [{ from: '2026-11-21', to: '2026-11-29', offset: -7, label: '이집트 (UTC+2)' }],
 
   days: [
     { d: '2026-11-19', note: '떠나기 전 준비 ①', items: [
