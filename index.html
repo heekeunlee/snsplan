@@ -59,6 +59,15 @@ header{position:relative}
 .who.both{border-color:var(--mk);color:var(--mk)}
 details summary{cursor:pointer;font-weight:700;font-size:14px;margin-top:14px}
 .td.done{opacity:.6}
+.kc h3{font-family:var(--fd);font-size:19px;margin:0 0 6px}
+.ks{border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
+.ks .hd{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:13px;font-weight:700;margin-bottom:6px}
+.box{white-space:pre-wrap;background:var(--bg);border-radius:8px;padding:9px 11px;font-size:14px;margin:4px 0 8px;word-break:keep-all;overflow-wrap:anywhere}
+.cp{font:600 12px var(--f);border:1px solid var(--acc);color:var(--acc);background:transparent;border-radius:8px;padding:2px 10px;cursor:pointer;margin-left:auto}
+.cp.ok{background:var(--acc);color:var(--panel)}
+.lbl{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--mut)}
+.chk{display:flex;gap:8px;align-items:flex-start;font-size:14px;margin:4px 0}.chk input{margin-top:4px;width:18px;height:18px;flex:none}
+.kc.alldone{opacity:.6}
 @media (max-width:560px){.day{grid-template-columns:1fr;gap:4px}}
 </style>
 </head>
@@ -71,12 +80,16 @@ details summary{cursor:pointer;font-weight:700;font-size:14px;margin-top:14px}
   <p class="mut sm" id="upd"></p>
 </header>
 <nav>
-  <a href="#today">오늘</a><a href="#todo">전체 할 일</a><a href="#cal">일정</a><a href="#time">황금 시간대</a><a href="#how">예약·게시 방법</a><a href="#tz">시차표</a><a href="#cmt">댓글 관리</a><a href="#strat">전략</a><a href="#make">만들 것</a>
+  <a href="#today">오늘</a><a href="#kit">여행 꾸러미</a><a href="#todo">전체 할 일</a><a href="#cal">일정</a><a href="#time">황금 시간대</a><a href="#how">예약·게시 방법</a><a href="#tz">시차표</a><a href="#cmt">댓글 관리</a><a href="#strat">전략</a><a href="#make">만들 것</a>
 </nav>
 
 <h2 id="today">오늘 할 일</h2>
 <div class="card today" id="todayBox"></div>
 <div class="clock" id="clock"></div>
+
+<h2 id="kit">여행 꾸러미 (11/21–11/29)</h2>
+<p class="sm mut" id="kitHead"></p>
+<div id="kitBox"></div>
 
 <h2 id="todo">전체 할 일</h2>
 <p class="sm mut">운영 할 일 목록 전체(매일 아침 보고와 같은 목록). <span id="todoUpd"></span></p>
@@ -160,6 +173,7 @@ details summary{cursor:pointer;font-weight:700;font-size:14px;margin-top:14px}
 
 <script src="data.js"></script>
 <script src="todos.js"></script>
+<script src="kit.js"></script>
 <script>
 var P=window.PLAN, TAG={yt:['유튜브','--yt'],nb:['네이버 블로그','--nb'],nc:['네이버 클립','--nc'],ig:['인스타','--ig'],rd:['레딧','--rd'],gh:['깃허브','--gh'],mk:['제작·준비','--mk']};
 var WHO={me:'나',claude:'Claude',auto:'자동'}, WD='일월화수목금토';
@@ -189,6 +203,29 @@ tick();setInterval(tick,30000);
 var rows='';[0,7,9,12,13,19,20,21,22,23].forEach(function(h){function f(o){var x=((h+o)%24+24)%24;return('0'+x).slice(-2)+':00'+(h+o<0?' <small class="mut">전날</small>':'')}rows+='<tr><td><b>'+f(0)+'</b></td><td>'+f(-7)+'</td><td>'+f(-6)+'</td><td>'+f(-14)+'</td><td>'+f(-17)+'</td></tr>'});
 document.getElementById('tzBody').innerHTML=rows;
 document.getElementById('makeBox').innerHTML='<ul>'+P.make.map(function(m){return'<li><b>'+m.due.slice(5).replace('-','/')+'까지</b> · '+esc(m.x)+'</li>'}).join('')+'</ul>';
+// ── 여행 꾸러미
+(function(){var K=window.KIT;if(!K)return;var B='https://heekeunlee.github.io/simulatiolab_blog/p/';
+ document.getElementById('kitHead').innerHTML='영상·커버 사진: '+esc(K.folder)+' · 인스타 프로필 링크: <a href="'+K.profile+'">블로그 첫 화면</a> · 체크한 칸은 이 기기에 기억돼요';
+ function get(k){try{return localStorage.getItem(k)==='1'}catch(e){return false}}
+ function set(k,v){try{localStorage.setItem(k,v?'1':'0')}catch(e){}}
+ var n=0;function cb(key,label){return'<label class="chk"><input type="checkbox" data-k="'+key+'"'+(get(key)?' checked':'')+'><span>'+label+'</span></label>'}
+ function cbox(txt,lab){n++;return'<div class="lbl">'+lab+'<button class="cp" data-c="kc'+n+'">복사</button></div><p class="box" id="kc'+n+'">'+esc(txt)+'</p>'}
+ function loc(t){var a=awayOf('2026-11-24');return a?' <span class="sm" style="color:var(--acc)">현지 '+shift(t,a.offset)+'</span>':''}
+ document.getElementById('kitBox').innerHTML=K.cards.map(function(c){var dt=new Date(c.d+'T00:00:00'),k='kit-'+c.d+'-',url=B+c.blog.slug+'/';
+  var h='<div class="card kc" data-d="'+c.d+'"><h3>'+(dt.getMonth()+1)+'/'+dt.getDate()+' ('+WD[dt.getDay()]+') · '+esc(c.name)+'</h3>';
+  h+='<div class="ks"><div class="hd"><span class="tag" style="background:var(--nb)">네이버 블로그</span> '+c.blog.no+'편 · 예약 00:00 (출발 전에)</div>'+cb(k+'nb','<a href="'+url+'#naver">'+esc(c.blog.title)+'</a> → 제목·본문 복사 → 네이버 <b>예약 발행 '+(dt.getMonth()+1)+'/'+dt.getDate()+' 00:00</b>')+'</div>';
+  if(c.clip){var desc=c.clip.desc+url;
+   h+='<div class="ks"><div class="hd"><span class="tag" style="background:var(--nc)">네이버 클립</span> 한국 '+c.clip.at+loc(c.clip.at)+'</div>'+cb(k+'nc','파일 <b>'+esc(c.file)+'</b> 올리기 (커버 '+esc(c.cover)+')')+cbox(c.clip.title,'제목')+cbox(desc,'설명')+cbox(c.clip.tags,'해시태그')+'</div>';
+   h+='<div class="ks"><div class="hd"><span class="tag" style="background:var(--ig)">인스타 릴스</span> 예약 20:00'+loc('20:00')+'</div>'+cb(k+'ig','같은 영상 <b>'+esc(c.file)+'</b>으로 릴스 예약 (출발 전에)')+cbox(c.reel,'캡션')+'</div>'}
+  else h+='<p class="sm mut">이 주제는 한국어 영상이 없어 블로그만 올려요.</p>';
+  return h+'</div>'}).join('');
+ function mark(){document.querySelectorAll('.kc').forEach(function(c){var x=c.querySelectorAll('input');c.classList.toggle('alldone',x.length&&[].every.call(x,function(i){return i.checked}))})}
+ document.querySelectorAll('#kitBox input').forEach(function(i){i.onchange=function(){set(i.dataset.k,i.checked);mark()}});mark();
+ document.querySelectorAll('#kitBox .cp').forEach(function(b){b.onclick=function(){var el=document.getElementById(b.dataset.c),t=el.innerText;
+  var ok=function(){b.textContent='복사됨';b.classList.add('ok');setTimeout(function(){b.textContent='복사';b.classList.remove('ok')},1800)};
+  try{navigator.clipboard.writeText(t).then(ok,function(){sel(el)})}catch(e){sel(el)}}});
+ function sel(el){var r=document.createRange();r.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(r)}
+})();
 // ── 테마 스위치
 (function(){var b=document.getElementById('themeBtn'),root=document.documentElement;
  function cur(){return root.getAttribute('data-theme')==='dark'?'dark':'light'}

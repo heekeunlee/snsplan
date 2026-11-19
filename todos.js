@@ -478,6 +478,42 @@ window.TODOS = {
    "status": "todo",
    "why": "12편 끝 예고에서 13편을 약속함",
    "done": null
+  },
+  {
+   "id": "trip-naver-reserve",
+   "title": "출발 전: 네이버 블로그 예약 발행 4개 (3편 11/21 · 4편 11/24 · 5편 11/26 · 6편 11/28, 모두 00:00) — snsplan 여행 꾸러미",
+   "who": "me",
+   "due": "2026-11-20",
+   "status": "todo",
+   "why": "여행 중엔 블로그 옮기기가 어려움. 깃허브(00:05)보다 먼저 공개",
+   "done": null
+  },
+  {
+   "id": "trip-airdrop",
+   "title": "출발 전: 바탕화면 여행꾸러미 폴더(영상 3·커버 3) 휴대폰으로 AirDrop · 이심 데이터 · 앱 로그인 확인",
+   "who": "me",
+   "due": "2026-11-20",
+   "status": "todo",
+   "why": "집 Mac 파일은 여행 중 못 꺼냄",
+   "done": null
+  },
+  {
+   "id": "trip-reels-reserve",
+   "title": "인스타 릴스 3편 예약 (11/24·26·28 20:00) — Business Suite, 캡션은 snsplan 여행 꾸러미",
+   "who": "both",
+   "due": "2026-11-20",
+   "status": "todo",
+   "why": "Claude가 크롬으로 예약 가능(business.facebook.com 로그인 필요), 예약 전 확인",
+   "done": null
+  },
+  {
+   "id": "insta-profile-link",
+   "title": "인스타 프로필 링크를 블로그 첫 화면(heekeunlee.github.io/simulatiolab_blog)으로",
+   "who": "me",
+   "due": "2026-11-20",
+   "status": "todo",
+   "why": "릴스 캡션의 '프로필 링크'가 가리킬 곳",
+   "done": null
   }
  ]
 };
