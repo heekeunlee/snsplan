@@ -21,6 +21,7 @@ h2{font-family:var(--fd);font-size:22px;margin:40px 0 10px;scroll-margin-top:60p
 .mut{color:var(--mut)}.sm{font-size:13px}
 nav{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;gap:6px;overflow-x:auto;padding:10px 0;border-bottom:1px solid var(--line)}
 nav a{flex:none;font-size:13px;text-decoration:none;color:var(--fg);background:var(--chip);border-radius:99px;padding:3px 12px}
+.card[id]{scroll-margin-top:60px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:10px 0;min-width:0}
 .today{border:2px solid var(--acc)}
 .clock{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:10px}
@@ -114,11 +115,26 @@ details summary{cursor:pointer;font-weight:700;font-size:14px;margin-top:14px}
 <p class="sm mut">일반적인 경향이에요. 2주마다 각 앱의 인사이트(시청자 활동 시간)를 보고 고쳐요.</p></div>
 
 <h2 id="how">예약·게시 방법</h2>
-<div class="card"><b><span class="tag" style="background:var(--nb)">네이버 블로그</span> 예약 발행 — 직접</b>
-<ul><li>깃허브 블로그 글 주소 끝에 <code>#naver</code> → 제목 복사·본문 복사 → 네이버 글쓰기에 붙여넣기</li>
-<li>발행 → 발행 시간 <b>예약</b> → 날짜·시각 (00:00)</li>
-<li>공개된 뒤 네이버 글 주소를 Claude에게 → 대시보드 '네이버 게시' 표시</li>
-<li>Claude는 네이버에 직접 올릴 수 없어요 (크롬 안전 제한, 글쓰기 API 없음)</li></ul></div>
+<div class="card" id="naver-howto"><b><span class="tag" style="background:var(--nb)">네이버 블로그</span> 예약 발행 — 직접 (한 편 3분)</b>
+<p class="sm mut" style="margin:6px 0">Claude는 네이버에 직접 올릴 수 없어요(크롬 안전 제한·글쓰기 API 없음). 출발 전에 집 컴퓨터로 4개를 걸어 두세요.</p>
+<div class="tw"><table><tr><th>공개 (한국 / 이집트)</th><th>글</th><th>옮기기</th></tr><tr><td><b>11/21(토) 00:00</b><br><small style="color:var(--acc)">이집트 11/20 17:00</small></td><td>3편 버스 몰림</td><td><a href="https://heekeunlee.github.io/simulatiolab_blog/p/bus-bunching/#naver" target="_blank" rel="noopener">옮기기 페이지 →</a></td></tr><tr><td><b>11/24(화) 00:00</b><br><small style="color:var(--acc)">이집트 11/23 17:00</small></td><td>4편 새치기</td><td><a href="https://heekeunlee.github.io/simulatiolab_blog/p/queue/#naver" target="_blank" rel="noopener">옮기기 페이지 →</a></td></tr><tr><td><b>11/26(목) 00:00</b><br><small style="color:var(--acc)">이집트 11/25 17:00</small></td><td>5편 칭찬과 꾸중</td><td><a href="https://heekeunlee.github.io/simulatiolab_blog/p/regression/#naver" target="_blank" rel="noopener">옮기기 페이지 →</a></td></tr><tr><td><b>11/28(토) 00:00</b><br><small style="color:var(--acc)">이집트 11/27 17:00</small></td><td>6편 녹색 물결</td><td><a href="https://heekeunlee.github.io/simulatiolab_blog/p/greenwave/#naver" target="_blank" rel="noopener">옮기기 페이지 →</a></td></tr></table></div>
+<ol style="padding-left:20px;margin:10px 0">
+<li><b>옮기기 페이지</b>를 연다 (글 주소 끝에 <code>#naver</code>)</li>
+<li><b>제목 복사</b> → 네이버 블로그 <b>글쓰기</b> 제목 칸에 붙여넣기</li>
+<li><b>본문 복사</b> → 본문 칸에 붙여넣기 (사진이 따라왔는지 훑어보기)</li>
+<li><b>태그 복사</b>도 눌러 둔다</li>
+<li>오른쪽 위 <b>[발행]</b> → 설정 창이 열림 (바로 올라가지 않음)</li>
+<li>설정 창: <b>카테고리</b> 고르기 · <b>태그</b> 붙여넣기 · 공개 <b>전체 공개</b> · <b>발행 시간 '현재' → '예약'</b> → 날짜 + <b>00시 00분</b></li>
+<li>아래 <b>[발행]</b> → 예약 발행으로 저장. 다음 글도 같은 순서</li>
+<li>확인: 내 블로그 글 목록에 <b>'예약'</b> 표시와 날짜. 고칠 땐 글을 열어 수정 → 발행 설정에서 시각 다시 고르기</li>
+</ol>
+<ul class="sm">
+<li>⚠️ <b>'현재'로 두고 발행하면 바로 공개</b>돼요. 6번에서 '예약'으로 바뀌었는지 꼭 확인</li>
+<li>⚠️ <b>3편(11/21 00:00)은 출국하는 날 밤</b> — 오늘·내일 꼭 예약</li>
+<li>00시인 이유: 깃허브 블로그가 00:05에 자동 공개 → 네이버가 5분 먼저여야 중복 문서 위험이 줄어요</li>
+<li>휴대폰 앱도 예약 가능(발행 설정 → 예약)하지만 사진·서식은 컴퓨터가 더 잘 들어가요</li>
+<li>공개된 뒤 네이버 글 주소를 Claude에게 → 블로그 대시보드 '네이버 게시' 표시</li>
+</ul></div>
 <div class="card"><b><span class="tag" style="background:var(--gh)">깃허브 블로그</span> — 자동</b>
 <ul><li>글의 date가 되면 매일 00:05(한국)에 저절로 공개. 할 일 없음</li></ul></div>
 <div class="card"><b><span class="tag" style="background:var(--ig)">인스타 릴스</span> 예약 — Claude 또는 직접</b>
@@ -214,7 +230,7 @@ document.getElementById('makeBox').innerHTML='<ul>'+P.make.map(function(m){retur
  function loc(t){return ' <span class="sm" style="color:var(--acc)">이집트 '+shift(t,-7)+'</span>'}
  document.getElementById('kitBox').innerHTML=K.cards.map(function(c){var dt=new Date(c.d+'T00:00:00'),k='kit-'+c.d+'-',url=B+c.blog.slug+'/';
   var h='<div class="card kc" data-d="'+c.d+'"><h3>'+(dt.getMonth()+1)+'/'+dt.getDate()+' ('+WD[dt.getDay()]+') · '+esc(c.name)+'</h3>';
-  h+='<div class="ks"><div class="hd"><span class="tag" style="background:var(--nb)">네이버 블로그</span> '+c.blog.no+'편 · 예약 한국 00:00'+loc('00:00')+'</div>'+cb(k+'nb','<a href="'+url+'#naver">'+esc(c.blog.title)+'</a> → 제목·본문 복사 → 네이버 <b>예약 발행 '+(dt.getMonth()+1)+'/'+dt.getDate()+' 00:00 (한국)</b> — 출발 전에')+'</div>';
+  h+='<div class="ks"><div class="hd"><span class="tag" style="background:var(--nb)">네이버 블로그</span> '+c.blog.no+'편 · 예약 한국 00:00'+loc('00:00')+' <a class="sm" href="#naver-howto">예약 방법</a></div>'+cb(k+'nb','<a href="'+url+'#naver">'+esc(c.blog.title)+'</a> → 제목·본문 복사 → 네이버 <b>예약 발행 '+(dt.getMonth()+1)+'/'+dt.getDate()+' 00:00 (한국)</b> — 출발 전에')+'</div>';
   if(c.clip){var desc=c.clip.desc+url;
    h+='<div class="ks"><div class="hd"><span class="tag" style="background:var(--nc)">네이버 클립</span> 한국 '+c.clip.at+loc(c.clip.at)+'</div>'+cb(k+'nc','파일 <b>'+esc(c.file)+'</b> 올리기 (커버 '+esc(c.cover)+')')+cbox(c.clip.title,'제목')+cbox(desc,'설명')+cbox(c.clip.tags,'해시태그')+'</div>';
    h+='<div class="ks"><div class="hd"><span class="tag" style="background:var(--ig)">인스타 릴스</span> 20:00 자동 공개'+loc('20:00')+'</div>'+(c.reelDone?'<p class="sm">✅ '+esc(c.reelDone)+' — 할 일 없음</p>':cb(k+'ig','같은 영상 <b>'+esc(c.file)+'</b>으로 릴스 예약'))+'<details><summary class="sm">캡션 보기</summary>'+cbox(c.reel,'캡션')+'</details></div>';if(c.story)h+='<div class="ks"><div class="hd"><span class="tag" style="background:var(--ig)">인스타 스토리</span> 한국 20:05–21:00'+loc('20:05–21:00')+'</div>'+cb(k+'st','릴스가 올라온 뒤 → 릴스 아래 <b>보내기(종이비행기) → 스토리에 추가</b>')+cb(k+'st2','위쪽 <b>스티커 → 링크</b> → 아래 주소 붙여넣기 → 스티커 글자도 붙여넣기 → 내 스토리에 공유')+cbox(c.story.url,'링크 주소')+cbox(c.story.text,'스티커 글자')+'<p class="sm mut">스토리는 예약이 안 돼요. 24시간 뒤 사라지고, 링크 스티커는 실제로 눌려서 사이트로 바로 가요.</p></div>'}
